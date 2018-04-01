@@ -25,7 +25,7 @@ SUBDIR_SAL = "libsaliency"
 all: $(LIB_SAL) $(BIN)
 
 $(BIN): $(OBJS) $(LIB_SAL)
-	$(CC) $(FFLAGS) $(CCFLAGS) -o $(BIN) $(OBJS) -I . -mwindows -L . $(LIB_SAL)
+	$(CC) $(FFLAGS) $(CCFLAGS) -o $(BIN) $(OBJS) -I . -L . $(LIB_SAL)
 
 $(LIB_SAL): 
 	@cd $(SUBDIR_SAL) ; make
