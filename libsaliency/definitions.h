@@ -67,22 +67,10 @@ struct curve_t {
 void edgedetect(salinfo_t *salinfo);
 void colourfulness(salinfo_t *salinfo);
 curve_t * curvefollow(salinfo_t *salinfo);
-position_t * createposition();
-curve_t * createcurve();
 void seekbrightspot(UINT8 *,UINT8 *,INT32 *,INT32 *,INT32);
 void track(UINT8 *,UINT8 *,INT32 *,INT32 *,INT32);
 void backtrack(UINT8 *,UINT8 *,INT32 *,INT32 *,INT32);
 void bandremove(UINT8 *,UINT8 *,INT32,INT32);
-void curveremove(UINT8 *,position_t *,INT32);
-void destroycurve(curve_t *ccurrent);
-void enclosecurve(curve_t *,INT32);
-INT32 checkoverlap(object_t *objcurrent,curve_t *ccurrent);
-object_t * createobject();
-void brightnessrank(object_t *objcurrent,salinfo_t *salinfo);
-void colourfulnessrank(object_t *objbegin,salinfo_t *salinfo);
-void positionrank(object_t *objbegin,salinfo_t *salinfo);
-void arearank(object_t *objbegin,salinfo_t *salinfo);
-void contrastrank(object_t *);
 void objectrank(object_t *objbegin,salinfo_t *salinfo);
 
 #endif

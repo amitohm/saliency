@@ -131,26 +131,3 @@ void colourfulness(salinfo_t *salinfo) {
     free(tout);
     return;
 }
-
-void colourfulnessrank(object_t *objcurrent,salinfo_t *salinfo) {
-    UINT8 *chroma;
-    INT32 count,i,j,cols;
-    DOUBLE colourfulness;
-    /********************************************************************************/
-    chroma = salinfo->temp;
-    cols = salinfo->cols;
-
-    while(objcurrent != NULL) {
-        count = 0;
-        colourfulness = 0.0;
-
-        for(i=objcurrent->ymin;i<=objcurrent->ymax;i++) {
-            for(j=objcurrent->xmin;j<=objcurrent->xmax;j++) {
-                colourfulness += (DOUBLE)chroma[i*cols+j];
-                count++;
-            }
-        }
-        objcurrent->rel_colour = (colourfulness*100)/(count*255);
-        objcurrent = objcurrent->next;
-    }
-}

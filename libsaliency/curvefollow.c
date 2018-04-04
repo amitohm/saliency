@@ -20,7 +20,7 @@
 
 #include "definitions.h"
 
-curve_t * createcurve() {
+static curve_t * createcurve() {
     curve_t *ctemp;
     ctemp = (curve_t *)malloc(sizeof(curve_t));
     if(ctemp == NULL) {
@@ -30,7 +30,7 @@ curve_t * createcurve() {
     return(ctemp);
 }
 
-position_t * createposition() {
+static position_t * createposition() {
     position_t *ptemp;
     ptemp = (position_t *)malloc(sizeof(position_t));
     if(ptemp == NULL) {
@@ -40,7 +40,7 @@ position_t * createposition() {
     return(ptemp);
 }
 
-void destroycurve(curve_t *ccurrent) {
+static void destroycurve(curve_t *ccurrent) {
     position_t *pcurrent,*ptemp;
 
     pcurrent = ccurrent->head;
@@ -52,7 +52,7 @@ void destroycurve(curve_t *ccurrent) {
     free(ccurrent);
 }
 
-void curveremove(UINT8 *result,position_t *pcurrent,INT32 cols) {
+static void curveremove(UINT8 *result,position_t *pcurrent,INT32 cols) {
     INT32 k,l;
     while(pcurrent!=NULL) {
         for(k=0;k<7;k++) {

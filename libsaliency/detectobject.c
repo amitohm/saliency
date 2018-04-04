@@ -20,7 +20,7 @@
 
 #include "definitions.h"
 
-object_t * createobject() {
+static object_t * createobject() {
     object_t *objtemp;
     objtemp = (object_t *)malloc(sizeof(object_t));
     if(objtemp == NULL)	{
@@ -30,28 +30,70 @@ object_t * createobject() {
     return(objtemp);
 }
 
-INT32 checkoverlap(object_t *objcurrent,curve_t *ccurrent) {
-    INT32 check;	
-    if((ccurrent->xmin>objcurrent->xmin&&ccurrent->xmin<objcurrent->xmax)&&((ccurrent->ymin>objcurrent->ymin&&ccurrent->ymin<objcurrent->ymax)
-            ||(ccurrent->ymax>objcurrent->ymin&&ccurrent->ymax<objcurrent->ymax))) {
-	check = 1;
-    } else if((ccurrent->xmax>objcurrent->xmin&&ccurrent->xmax<objcurrent->xmax)&&((ccurrent->ymin>objcurrent->ymin&&ccurrent->ymin<objcurrent->ymax)
-            ||(ccurrent->ymax>objcurrent->ymin&&ccurrent->ymax<objcurrent->ymax))) {
-	check = 1;
-    } else if((ccurrent->xmin>objcurrent->xmin&&ccurrent->xmin<objcurrent->xmax)&&(ccurrent->ymin<objcurrent->ymin&&ccurrent->ymax>objcurrent->ymax)) {
-	check = 1;
-    } else if((ccurrent->xmax>objcurrent->xmin&&ccurrent->xmax<objcurrent->xmax)&&(ccurrent->ymin<objcurrent->ymin&&ccurrent->ymax>objcurrent->ymax)) {
-	check = 1;
-    } else if((ccurrent->ymin>objcurrent->ymin&&ccurrent->ymin<objcurrent->ymax)&&(ccurrent->xmin<objcurrent->xmin&&ccurrent->xmax>objcurrent->xmax)) {
-	check = 1;
-    } else if((ccurrent->ymax>objcurrent->ymin&&ccurrent->ymax<objcurrent->ymax)&&(ccurrent->xmin<objcurrent->xmin&&ccurrent->xmax>objcurrent->xmax)) {
-        check = 1;
-    } else if((ccurrent->xmin<objcurrent->xmin&&ccurrent->xmax>objcurrent->xmax)&&(ccurrent->ymin<objcurrent->ymin&&ccurrent->ymax>objcurrent->ymax)) {
-	check = 1;
+static INT32 checkoverlap(object_t *objcurrent,curve_t *ccurrent) {
+    if (((ccurrent->xmin >= objcurrent->xmin) && (ccurrent->xmin <= objcurrent->xmax)) &&
+	    (((ccurrent->ymin >= objcurrent->ymin) && (ccurrent->ymin <= objcurrent->ymax)) ||
+	     ((ccurrent->ymax >= objcurrent->ymin) && (ccurrent->ymax<=objcurrent->ymax)))) {
+	return TRUE;
+    } else if(((ccurrent->xmax >= objcurrent->xmin) && (ccurrent->xmax <= objcurrent->xmax)) &&
+	    (((ccurrent->ymin >= objcurrent->ymin) && (ccurrent->ymin <= objcurrent->ymax)) ||
+	     ((ccurrent->ymax >= objcurrent->ymin) && (ccurrent->ymax <= objcurrent->ymax)))) {
+	return TRUE;
+    } else if(((ccurrent->xmin >= objcurrent->xmin) && (ccurrent->xmin <= objcurrent->xmax)) &&
+	    ((ccurrent->ymin <= objcurrent->ymin) && (ccurrent->ymax >= objcurrent->ymax))) {
+	return TRUE;
+    } else if(((ccurrent->xmax >= objcurrent->xmin) && (ccurrent->xmax <= objcurrent->xmax)) &&
+	    ((ccurrent->ymin <= objcurrent->ymin) && (ccurrent->ymax >= objcurrent->ymax))) {
+	return TRUE;
+    } else if(((ccurrent->ymin >= objcurrent->ymin) && (ccurrent->ymin <= objcurrent->ymax)) &&
+	    ((ccurrent->xmin <= objcurrent->xmin) && (ccurrent->xmax >= objcurrent->xmax))) {
+	return TRUE;
+    } else if(((ccurrent->ymax >= objcurrent->ymin) && (ccurrent->ymax <= objcurrent->ymax)) &&
+	    ((ccurrent->xmin <= objcurrent->xmin) && (ccurrent->xmax >= objcurrent->xmax))) {
+	return TRUE;
+    } else if(((ccurrent->xmin <= objcurrent->xmin) && (ccurrent->xmax >= objcurrent->xmax)) &&
+	    ((ccurrent->ymin <= objcurrent->ymin) && (ccurrent->ymax >= objcurrent->ymax))) {
+	return TRUE;
     } else {
-	check = 0;
+	return FALSE;
     }
-    return(check);
+}
+
+static void mergeobjects(object_t *objbegin) {
+    object_t *objcurrent, *objnext;
+
+    objcurrent = objbegin;
+
+    while (NULL != objcurrent) {
+	int isOverlap = FALSE;
+	objnext = objcurrent->next;
+	while (NULL != objnext) {
+	    if ((objcurrent->xmin > objnext->xmax) ||
+		(objnext->xmin > objcurrent->xmax)) {
+		isOverlap = FALSE;
+	    } else if ((objcurrent->ymin > objnext->ymax) ||
+		       (objnext->ymin > objcurrent->ymax)) {
+		isOverlap = FALSE;
+	    } else {
+		isOverlap = TRUE;
+	    }
+
+	    if (isOverlap) {
+		objcurrent->xmin = MIN(objcurrent->xmin, objnext->xmin);
+		objcurrent->ymin = MIN(objcurrent->ymin, objnext->ymin);
+		objcurrent->xmax = MAX(objcurrent->xmax, objnext->xmax);
+		objcurrent->ymax = MAX(objcurrent->ymax, objnext->ymax);
+
+		objcurrent->next = objnext->next;
+		free(objnext);
+		objnext = objcurrent->next;
+	    } else {
+		objnext = objnext->next;
+	    }
+	}
+	objcurrent = objcurrent->next;
+    }
+    return;
 }
 
 object_t * detectobject(salinfo_t *salinfo) {
@@ -256,6 +298,12 @@ object_t * detectobject(salinfo_t *salinfo) {
         }
         ccurrent = cbegin;
     }
+
+    /****************************************************************************/
+    /*			Merge overlapping objects				*/
+    /****************************************************************************/
+    mergeobjects(objbegin);
+
     colourfulness(salinfo);	
 #if defined(DUMP_CHROMA_FRAME)
     write_pgm(salinfo,"chroma");
