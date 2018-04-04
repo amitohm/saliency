@@ -224,6 +224,7 @@ void write_pgm(salinfo_t *salinfo,INT8 *fname) {
     INT8 out_fname[100];
 
     sprintf(out_fname,"%s_%s.pgm",salinfo->fname,fname);
+    printf("Writing file %s\n", out_fname);
     fp = fopen(out_fname,"wb");
     if (fp==NULL) {
         printf("Error accessing %s.\n",out_fname);

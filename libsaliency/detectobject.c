@@ -87,7 +87,7 @@ object_t * detectobject(salinfo_t *salinfo) {
     ////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////
-    ///////					detect single objects				////////
+    ///////	detect single objects				////////
     ////////////////////////////////////////////////////////////////////
     while(ccurrent != NULL) {
         height = ccurrent->ymax - ccurrent->ymin + 1;
@@ -137,7 +137,7 @@ object_t * detectobject(salinfo_t *salinfo) {
         }
     }
     ////////////////////////////////////////////////////////////////////
-    ///////		remove curves overlapping single objects		////////
+    ///////	remove curves overlapping single objects	////////
     ////////////////////////////////////////////////////////////////////
     objcurrent = objbegin;
     while(objcurrent != NULL) {
@@ -163,7 +163,7 @@ object_t * detectobject(salinfo_t *salinfo) {
         objcurrent = objcurrent->next;
     }
     ////////////////////////////////////////////////////////////////////
-    //////			detect remaining objects					////////
+    //////	detect remaining objects			////////
     ////////////////////////////////////////////////////////////////////
     objcurrent = objbegin;
     if(objcurrent != NULL) {
@@ -234,7 +234,7 @@ object_t * detectobject(salinfo_t *salinfo) {
         }
         cprevious = ccurrent = cbegin;
         ////////////////////////////////////////////////////////////////////
-        ///////			remove curves inside current object			////////
+        ///////		remove curves inside current object	    ////////
         ////////////////////////////////////////////////////////////////////
         while(ccurrent!=NULL) {
             if((ccurrent->xmin>objtemp->xmin) && (ccurrent->xmax<objtemp->xmax) && 

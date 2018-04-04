@@ -1,2 +1,3 @@
-sofa.ppm
+*.ppm
+*.pgm
 numbers/*

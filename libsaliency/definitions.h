@@ -28,6 +28,9 @@
 //#define DUMP_CURVEFOLLOW_FRAME 1
 //#define DUMP_CHROMA_FRAME 1
 
+#define TRUE	1
+#define FALSE	0
+
 #define	 MIN(X,Y)	((X) < (Y) ? (X) : (Y))
 
 #define	 MAX(X,Y)	((X) > (Y) ? (X) : (Y))
@@ -74,7 +77,6 @@ void curveremove(UINT8 *,position_t *,INT32);
 void destroycurve(curve_t *ccurrent);
 void enclosecurve(curve_t *,INT32);
 INT32 checkoverlap(object_t *objcurrent,curve_t *ccurrent);
-INT32 checkrepeat(object_t *,object_t *);
 object_t * createobject();
 void brightnessrank(object_t *objcurrent,salinfo_t *salinfo);
 void colourfulnessrank(object_t *objbegin,salinfo_t *salinfo);
